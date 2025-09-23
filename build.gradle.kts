@@ -1,9 +1,13 @@
 plugins {
-    id("java")
+    id("application")
+    id("checkstyle")
+    id("com.github.ben-manes.versions") version "0.52.0"
 }
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
+
+application { mainClass.set("org.example.Main") }
 
 repositories {
     mavenCentral()
