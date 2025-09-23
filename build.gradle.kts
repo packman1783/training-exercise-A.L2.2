@@ -14,6 +14,12 @@ repositories {
 }
 
 dependencies {
+    implementation("org.hibernate:hibernate-core:7.1.1.Final")
+
+    implementation("org.postgresql:postgresql:42.7.8")
+
+    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
+
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
