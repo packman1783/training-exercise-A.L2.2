@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -30,19 +30,17 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    public User(LocalDateTime createdAt) {
-        this.createdAt = LocalDateTime.now();
+    public User() {
     }
 
-    public User(long id, String name, String email, Integer age, LocalDateTime createdAt) {
-        this.id = id;
+    public User(String name, String email, Integer age) {
         this.name = name;
         this.email = email;
         this.age = age;
         this.createdAt = LocalDateTime.now();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
