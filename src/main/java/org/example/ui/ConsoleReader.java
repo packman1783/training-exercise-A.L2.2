@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class ConsoleReader {
     private final Scanner scanner;
 
-    public ConsoleReader() {
+    public ConsoleReader(Scanner scanner) {
         this.scanner = new Scanner(System.in);
     }
 

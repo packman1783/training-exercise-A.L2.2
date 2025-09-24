@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.example.dao.UserDao;
 import org.example.dao.UserDaoHibernateImpl;
 import org.example.entity.User;
+import org.example.timeUtility.QueryBenchmark;
 
 public class UserServiceHibernateImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceHibernateImpl.class);
@@ -108,6 +109,12 @@ public class UserServiceHibernateImpl implements UserService {
         }
 
         return users;
+    }
+
+    @Override
+    public void benchmarkQueries() {
+        QueryBenchmark benchmark = new QueryBenchmark(userDao);
+        benchmark.getQueryPerformance();
     }
 }
 

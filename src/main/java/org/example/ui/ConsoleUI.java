@@ -4,14 +4,17 @@ import java.util.List;
 
 import org.example.entity.User;
 import org.example.service.UserService;
+import org.example.timeUtility.QueryBenchmark;
 
 public class ConsoleUI {
     private final UserService userService;
     private final ConsoleReader reader;
+    private final QueryBenchmark queryBenchmark;
 
-    public ConsoleUI(UserService userService, ConsoleReader reader) {
+    public ConsoleUI(UserService userService, ConsoleReader reader, QueryBenchmark queryBenchmark) {
         this.userService = userService;
         this.reader = reader;
+        this.queryBenchmark = queryBenchmark;
     }
 
     public void start() {
@@ -30,6 +33,10 @@ public class ConsoleUI {
                 case 6 -> getUsersWithHql();
                 case 7 -> getUsersWithNativeQuery();
                 case 8 -> getUsersWithCriteria();
+                case 9 -> {
+                    getQueryPerformance();
+                    break;
+                }
                 case 0 -> run = false;
                 default -> System.out.println("Invalid option");
             }
@@ -48,6 +55,7 @@ public class ConsoleUI {
         System.out.println("6. List users with HQL (age > 18)");
         System.out.println("7. List users with Native Query (age > 18)");
         System.out.println("8. List users with Criteria API (age > 18)");
+        System.out.println("9. Get query performance for HQL Native Criteria request");
         System.out.println("0. Exit");
     }
 
@@ -108,5 +116,9 @@ public class ConsoleUI {
     public void getUsersWithCriteria() {
         List<User> users = userService.getUsersWithCriteria();
         users.forEach(System.out::println);
+    }
+
+    public void getQueryPerformance() {
+        queryBenchmark.getQueryPerformance();
     }
 }

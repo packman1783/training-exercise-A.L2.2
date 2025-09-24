@@ -1,17 +1,22 @@
 package org.example;
 
+import org.example.dao.UserDao;
+import org.example.dao.UserDaoHibernateImpl;
 import org.example.handler.HibernateHandler;
 import org.example.service.UserService;
 import org.example.service.UserServiceHibernateImpl;
+import org.example.timeUtility.QueryBenchmark;
 import org.example.ui.ConsoleReader;
 import org.example.ui.ConsoleUI;
 
 public class Main {
     public static void main(String[] args) {
+
         UserService userService = new UserServiceHibernateImpl();
         ConsoleReader consoleReader = new ConsoleReader();
+        QueryBenchmark queryBenchmark = new QueryBenchmark(userDao);
 
-        ConsoleUI consoleUI = new ConsoleUI(userService, consoleReader);
+        ConsoleUI consoleUI = new ConsoleUI(userService, consoleReader, queryBenchmark);
 
         consoleUI.start();
 
