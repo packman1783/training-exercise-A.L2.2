@@ -6,7 +6,7 @@ public class ConsoleReader {
     private final Scanner scanner;
 
     public ConsoleReader(Scanner scanner) {
-        this.scanner = new Scanner(System.in);
+        this.scanner = scanner;
     }
 
     public String readString(String prompt) {

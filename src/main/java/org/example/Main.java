@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Scanner;
+
 import org.example.dao.UserDao;
 import org.example.dao.UserDaoHibernateImpl;
 import org.example.handler.HibernateHandler;
@@ -11,9 +13,9 @@ import org.example.ui.ConsoleUI;
 
 public class Main {
     public static void main(String[] args) {
-
+        UserDao userDao = new UserDaoHibernateImpl();
         UserService userService = new UserServiceHibernateImpl();
-        ConsoleReader consoleReader = new ConsoleReader();
+        ConsoleReader consoleReader = new ConsoleReader(new Scanner(System.in));
         QueryBenchmark queryBenchmark = new QueryBenchmark(userDao);
 
         ConsoleUI consoleUI = new ConsoleUI(userService, consoleReader, queryBenchmark);
