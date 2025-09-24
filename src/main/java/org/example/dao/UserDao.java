@@ -14,4 +14,10 @@ public interface UserDao {
     void update(User user);
 
     void delete(User user);
+
+    List<User> getUsersWithHql();
+
+    List<User> getUsersWithNativeQuery();
+
+    List<User> getUsersWithCriteria();
 }

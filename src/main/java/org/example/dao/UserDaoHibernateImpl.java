@@ -1,5 +1,9 @@
 package org.example.dao;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+
 import java.util.List;
 
 import org.example.entity.User;
@@ -62,6 +66,40 @@ public class UserDaoHibernateImpl implements UserDao {
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<User> getUsersWithHql() {
+        try (Session session = HibernateHandler.getSessionFactory().openSession()) {
+            String hql = "FROM User u WHERE u.age > :age";
+
+            return session.createQuery(hql, User.class)
+                    .setParameter("age", 18)
+                    .list();
+        }
+    }
+
+    @Override
+    public List<User> getUsersWithNativeQuery() {
+        try (Session session = HibernateHandler.getSessionFactory().openSession()) {
+            String sql = "SELECT * FROM users WHERE age > :age";
+
+            return session.createNativeQuery(sql, User.class)
+                    .setParameter("age", 18)
+                    .list();
+        }
+    }
+
+    @Override
+    public List<User> getUsersWithCriteria() {
+        try (Session session = HibernateHandler.getSessionFactory().openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
+            criteriaQuery.select(root).where(criteriaBuilder.greaterThan(root.get("age"), 18));
+
+            return session.createQuery(criteriaQuery).getResultList();
         }
     }
 }

@@ -14,4 +14,10 @@ public interface UserService {
     void updateUser(Long id, String name, String email, int age);
 
     void deleteUser(Long id);
+
+    List<User> getUsersWithHql();
+
+    List<User> getUsersWithNativeQuery();
+
+    List<User> getUsersWithCriteria();
 }

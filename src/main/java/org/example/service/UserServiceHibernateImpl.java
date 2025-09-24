@@ -43,7 +43,9 @@ public class UserServiceHibernateImpl implements UserService {
     public List<User> getAllUsers() {
         List<User> users = userDao.findAll();
 
-        logger.info("Fetched {} users", users.size());
+        if (logger.isInfoEnabled()) {
+            logger.info("Fetched {} users", users.size());
+        }
 
         return users;
     }
@@ -73,6 +75,39 @@ public class UserServiceHibernateImpl implements UserService {
         } else {
             logger.warn("Delete failed, user not found with id={}", id);
         }
+    }
+
+    @Override
+    public List<User> getUsersWithHql() {
+        List<User> users = userDao.getUsersWithHql();
+
+        if (logger.isInfoEnabled()) {
+            logger.info("Fetched {} users get with Hql", users.size());
+        }
+
+        return users;
+    }
+
+    @Override
+    public List<User> getUsersWithNativeQuery() {
+        List<User> users = userDao.getUsersWithNativeQuery();
+
+        if (logger.isInfoEnabled()) {
+            logger.info("Fetched {} users get with native query", users.size());
+        }
+
+        return users;
+    }
+
+    @Override
+    public List<User> getUsersWithCriteria() {
+        List<User> users = userDao.getUsersWithCriteria();
+
+        if (logger.isInfoEnabled()) {
+            logger.info("Fetched {} users get with criteria", users.size());
+        }
+
+        return users;
     }
 }
 

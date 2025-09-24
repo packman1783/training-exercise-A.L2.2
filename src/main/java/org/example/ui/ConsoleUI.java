@@ -27,6 +27,9 @@ public class ConsoleUI {
                 case 3 -> listAllUsers();
                 case 4 -> updateUser();
                 case 5 -> deleteUser();
+                case 6 -> getUsersWithHql();
+                case 7 -> getUsersWithNativeQuery();
+                case 8 -> getUsersWithCriteria();
                 case 0 -> run = false;
                 default -> System.out.println("Invalid option");
             }
@@ -42,6 +45,9 @@ public class ConsoleUI {
         System.out.println("3. List all users");
         System.out.println("4. Update user");
         System.out.println("5. Delete user");
+        System.out.println("6. List users with HQL (age > 18)");
+        System.out.println("7. List users with Native Query (age > 18)");
+        System.out.println("8. List users with Criteria API (age > 18)");
         System.out.println("0. Exit");
     }
 
@@ -87,5 +93,20 @@ public class ConsoleUI {
 
         userService.deleteUser(id);
         System.out.println("User deleted");
+    }
+
+    public void getUsersWithHql() {
+        List<User> users = userService.getUsersWithHql();
+        users.forEach(System.out::println);
+    }
+
+    public void getUsersWithNativeQuery() {
+        List<User> users = userService.getUsersWithNativeQuery();
+        users.forEach(System.out::println);
+    }
+
+    public void getUsersWithCriteria() {
+        List<User> users = userService.getUsersWithCriteria();
+        users.forEach(System.out::println);
     }
 }
