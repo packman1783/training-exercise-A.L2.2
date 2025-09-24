@@ -20,4 +20,6 @@ public interface UserService {
     List<User> getUsersWithNativeQuery();
 
     List<User> getUsersWithCriteria();
+
+    public void benchmarkQueries();
 }

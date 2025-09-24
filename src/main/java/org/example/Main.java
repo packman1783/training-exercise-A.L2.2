@@ -14,7 +14,7 @@ import org.example.ui.ConsoleUI;
 public class Main {
     public static void main(String[] args) {
         UserDao userDao = new UserDaoHibernateImpl();
-        UserService userService = new UserServiceHibernateImpl();
+        UserService userService = new UserServiceHibernateImpl(userDao);
         ConsoleReader consoleReader = new ConsoleReader(new Scanner(System.in));
         QueryBenchmark queryBenchmark = new QueryBenchmark(userDao);
 

@@ -33,10 +33,7 @@ public class ConsoleUI {
                 case 6 -> getUsersWithHql();
                 case 7 -> getUsersWithNativeQuery();
                 case 8 -> getUsersWithCriteria();
-                case 9 -> {
-                    getQueryPerformance();
-                    break;
-                }
+                case 9 -> getQueryPerformance();
                 case 0 -> run = false;
                 default -> System.out.println("Invalid option");
             }

@@ -13,7 +13,11 @@ import org.example.timeUtility.QueryBenchmark;
 public class UserServiceHibernateImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceHibernateImpl.class);
 
-    private final UserDao userDao = new UserDaoHibernateImpl();
+    private final UserDao userDao;
+
+    public UserServiceHibernateImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public void createUser(String name, String email, int age) {
@@ -82,9 +86,7 @@ public class UserServiceHibernateImpl implements UserService {
     public List<User> getUsersWithHql() {
         List<User> users = userDao.getUsersWithHql();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Fetched {} users get with Hql", users.size());
-        }
+        logger.info("Fetched {} users with HQL", users.size());
 
         return users;
     }
@@ -93,9 +95,7 @@ public class UserServiceHibernateImpl implements UserService {
     public List<User> getUsersWithNativeQuery() {
         List<User> users = userDao.getUsersWithNativeQuery();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Fetched {} users get with native query", users.size());
-        }
+        logger.info("Fetched {} users with Native SQL", users.size());
 
         return users;
     }
@@ -104,15 +104,15 @@ public class UserServiceHibernateImpl implements UserService {
     public List<User> getUsersWithCriteria() {
         List<User> users = userDao.getUsersWithCriteria();
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Fetched {} users get with criteria", users.size());
-        }
+        logger.info("Fetched {} users with Criteria API", users.size());
 
         return users;
     }
 
     @Override
     public void benchmarkQueries() {
+        logger.info("Starting query performance benchmark...");
+
         QueryBenchmark benchmark = new QueryBenchmark(userDao);
         benchmark.getQueryPerformance();
     }
