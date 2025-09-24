@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import org.example.dao.UserDao;
-import org.example.dao.UserDaoHibernateImpl;
 import org.example.entity.User;
 import org.example.timeUtility.QueryBenchmark;
 

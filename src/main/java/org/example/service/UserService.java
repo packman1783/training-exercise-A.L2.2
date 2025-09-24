@@ -21,5 +21,5 @@ public interface UserService {
 
     List<User> getUsersWithCriteria();
 
-    public void benchmarkQueries();
+    void benchmarkQueries();
 }
