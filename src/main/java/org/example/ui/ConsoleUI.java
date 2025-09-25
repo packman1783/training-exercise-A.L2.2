@@ -1,21 +1,22 @@
 package org.example.ui;
 
-import java.util.List;
-
-import org.example.entity.Account;
-import org.example.entity.User;
+import org.example.handler.AccountCommandHandler;
+import org.example.handler.BenchmarkCommandHandler;
+import org.example.handler.UserCommandHandler;
 import org.example.service.UserService;
 import org.example.timeUtility.QueryBenchmark;
 
 public class ConsoleUI {
-    private final UserService userService;
     private final ConsoleReader reader;
-    private final QueryBenchmark queryBenchmark;
+    private final UserCommandHandler userHandler;
+    private final AccountCommandHandler accountHandler;
+    private final BenchmarkCommandHandler benchmarkHandler;
 
     public ConsoleUI(UserService userService, ConsoleReader reader, QueryBenchmark queryBenchmark) {
-        this.userService = userService;
         this.reader = reader;
-        this.queryBenchmark = queryBenchmark;
+        this.userHandler = new UserCommandHandler(userService, reader);
+        this.accountHandler = new AccountCommandHandler(userService, reader);
+        this.benchmarkHandler = new BenchmarkCommandHandler(queryBenchmark);
     }
 
     public void start() {
@@ -26,19 +27,19 @@ public class ConsoleUI {
             int choice = reader.readInt("Choose option: ");
 
             switch (choice) {
-                case 1 -> createUser();
-                case 2 -> getUserByID();
-                case 3 -> listAllUsers();
-                case 4 -> updateUser();
-                case 5 -> deleteUser();
-                case 6 -> getUsersWithHql();
-                case 7 -> getUsersWithNativeQuery();
-                case 8 -> getUsersWithCriteria();
-                case 9 -> getQueryPerformance();
-                case 10 -> createAccountForUser();
-                case 11 -> getUserAccounts();
-                case 12 -> deleteAccount();
-                case 13 -> transferMoney();
+                case 1 -> userHandler.createUser();
+                case 2 -> userHandler.getUserByID();
+                case 3 -> userHandler.listAllUsers();
+                case 4 -> userHandler.updateUser();
+                case 5 -> userHandler.deleteUser();
+                case 6 -> userHandler.getUsersWithHql();
+                case 7 -> userHandler.getUsersWithNativeQuery();
+                case 8 -> userHandler.getUsersWithCriteria();
+                case 9 -> benchmarkHandler.getQueryPerformance();
+                case 10 -> accountHandler.createAccountForUser();
+                case 11 -> accountHandler.getUserAccounts();
+                case 12 -> accountHandler.deleteAccount();
+                case 13 -> accountHandler.transferMoney();
                 case 0 -> run = false;
                 default -> System.out.println("Invalid option");
             }
@@ -63,103 +64,5 @@ public class ConsoleUI {
         System.out.println("12. Delete account");
         System.out.println("13. Transfer money between accounts");
         System.out.println("0. Exit");
-    }
-
-    private void createUser() {
-        String name = reader.readString("Enter name: ");
-        String email = reader.readString("Enter email: ");
-        int age = reader.readInt("Enter age: ");
-
-        userService.createUser(name, email, age);
-        System.out.println("User created");
-    }
-
-    private void getUserByID() {
-        Long id = reader.readLong("Enter user ID: ");
-
-        User user = userService.getUser(id);
-        System.out.println(user != null ? user : "User not found");
-    }
-
-    private void listAllUsers() {
-        List<User> users = userService.getAllUsers();
-        users.forEach(System.out::println);
-    }
-
-    private void updateUser() {
-        Long id = reader.readLong("Enter user ID to update: ");
-
-        User user = userService.getUser(id);
-        if (user != null) {
-            String name = reader.readString("New name (" + user.getName() + "): ");
-            String email = reader.readString("New email (" + user.getEmail() + "): ");
-            int age = reader.readInt("New age (" + user.getAge() + "): ");
-
-            userService.updateUser(id, name, email, age);
-            System.out.println("User updated");
-        } else {
-            System.out.println("User not found");
-        }
-    }
-
-    private void deleteUser() {
-        Long id = reader.readLong("Enter user ID to delete: ");
-
-        userService.deleteUser(id);
-        System.out.println("User deleted");
-    }
-
-    public void getUsersWithHql() {
-        List<User> users = userService.getUsersWithHql();
-        users.forEach(System.out::println);
-    }
-
-    public void getUsersWithNativeQuery() {
-        List<User> users = userService.getUsersWithNativeQuery();
-        users.forEach(System.out::println);
-    }
-
-    public void getUsersWithCriteria() {
-        List<User> users = userService.getUsersWithCriteria();
-        users.forEach(System.out::println);
-    }
-
-    public void getQueryPerformance() {
-        queryBenchmark.getQueryPerformance();
-    }
-
-    private void createAccountForUser() {
-        Long userId = reader.readLong("Enter user ID: ");
-        Long accountNumber = reader.readLong("Enter account number: ");
-        Double balance = reader.readDouble("Enter initial balance: ");
-
-        userService.createAccountForUser(userId, accountNumber, balance);
-        System.out.println("Account created successfully");
-    }
-
-    private void getUserAccounts() {
-        Long userId = reader.readLong("Enter user ID: ");
-        List<Account> accounts = userService.getUserAccounts(userId);
-
-        if (accounts.isEmpty()) {
-            System.out.println("No accounts found for this user");
-        } else {
-            accounts.forEach(System.out::println);
-        }
-    }
-
-    private void deleteAccount() {
-        Long accountId = reader.readLong("Enter account ID to delete: ");
-        userService.deleteAccount(accountId);
-        System.out.println("Account deleted successfully");
-    }
-
-    private void transferMoney() {
-        Long fromAccountId = reader.readLong("Enter source account ID: ");
-        Long toAccountId = reader.readLong("Enter destination account ID: ");
-        Double amount = reader.readDouble("Enter amount to transfer: ");
-
-        userService.transferMoney(fromAccountId, toAccountId, amount);
-        System.out.println("Transfer completed successfully");
     }
 }

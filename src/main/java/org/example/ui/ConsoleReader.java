@@ -50,7 +50,6 @@ public class ConsoleReader {
         return value;
     }
 
-
     public void close() {
         scanner.close();
     }

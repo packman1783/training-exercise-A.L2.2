@@ -17,7 +17,6 @@ public class Main {
     public static void main(String[] args) {
         UserDao userDao = new UserDaoHibernateImpl();
         AccountDao accountDao = new AccountDaoHibernateImpl();
-
         UserService userService = new UserServiceHibernateImpl(userDao, accountDao);
         ConsoleReader consoleReader = new ConsoleReader(new Scanner(System.in));
         QueryBenchmark queryBenchmark = new QueryBenchmark(userDao);
