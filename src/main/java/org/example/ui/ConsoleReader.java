@@ -38,6 +38,19 @@ public class ConsoleReader {
         return value;
     }
 
+    public double readDouble(String prompt) {
+        System.out.println(prompt);
+        while (!scanner.hasNextDouble()) {
+            scanner.nextLine();
+            System.out.println("Invalid input: " + prompt);
+        }
+
+        double value = scanner.nextDouble();
+        scanner.nextLine();
+        return value;
+    }
+
+
     public void close() {
         scanner.close();
     }

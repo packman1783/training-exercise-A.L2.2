@@ -2,6 +2,7 @@ package org.example.ui;
 
 import java.util.List;
 
+import org.example.entity.Account;
 import org.example.entity.User;
 import org.example.service.UserService;
 import org.example.timeUtility.QueryBenchmark;
@@ -34,6 +35,10 @@ public class ConsoleUI {
                 case 7 -> getUsersWithNativeQuery();
                 case 8 -> getUsersWithCriteria();
                 case 9 -> getQueryPerformance();
+                case 10 -> createAccountForUser();
+                case 11 -> getUserAccounts();
+                case 12 -> deleteAccount();
+                case 13 -> transferMoney();
                 case 0 -> run = false;
                 default -> System.out.println("Invalid option");
             }
@@ -53,6 +58,10 @@ public class ConsoleUI {
         System.out.println("7. List users with Native Query (age > 18)");
         System.out.println("8. List users with Criteria API (age > 18)");
         System.out.println("9. Get query performance for HQL Native Criteria request");
+        System.out.println("10. Create account for user");
+        System.out.println("11. Get user accounts");
+        System.out.println("12. Delete account");
+        System.out.println("13. Transfer money between accounts");
         System.out.println("0. Exit");
     }
 
@@ -117,5 +126,40 @@ public class ConsoleUI {
 
     public void getQueryPerformance() {
         queryBenchmark.getQueryPerformance();
+    }
+
+    private void createAccountForUser() {
+        Long userId = reader.readLong("Enter user ID: ");
+        Long accountNumber = reader.readLong("Enter account number: ");
+        Double balance = reader.readDouble("Enter initial balance: ");
+
+        userService.createAccountForUser(userId, accountNumber, balance);
+        System.out.println("Account created successfully");
+    }
+
+    private void getUserAccounts() {
+        Long userId = reader.readLong("Enter user ID: ");
+        List<Account> accounts = userService.getUserAccounts(userId);
+
+        if (accounts.isEmpty()) {
+            System.out.println("No accounts found for this user");
+        } else {
+            accounts.forEach(System.out::println);
+        }
+    }
+
+    private void deleteAccount() {
+        Long accountId = reader.readLong("Enter account ID to delete: ");
+        userService.deleteAccount(accountId);
+        System.out.println("Account deleted successfully");
+    }
+
+    private void transferMoney() {
+        Long fromAccountId = reader.readLong("Enter source account ID: ");
+        Long toAccountId = reader.readLong("Enter destination account ID: ");
+        Double amount = reader.readDouble("Enter amount to transfer: ");
+
+        userService.transferMoney(fromAccountId, toAccountId, amount);
+        System.out.println("Transfer completed successfully");
     }
 }

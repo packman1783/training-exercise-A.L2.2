@@ -5,23 +5,32 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.example.dao.AccountDao;
 import org.example.dao.UserDao;
+import org.example.entity.Account;
 import org.example.entity.User;
+import org.example.handler.HibernateHandler;
 import org.example.timeUtility.QueryBenchmark;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class UserServiceHibernateImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceHibernateImpl.class);
 
     private final UserDao userDao;
+    private final AccountDao accountDao;
 
-    public UserServiceHibernateImpl(UserDao userDao) {
+    public UserServiceHibernateImpl(UserDao userDao, AccountDao accountDao) {
         this.userDao = userDao;
+        this.accountDao = accountDao;
     }
 
     @Override
     public void createUser(String name, String email, int age) {
         if (email == null || email.isBlank()) {
+
             logger.error("Attempted to create user with empty email");
+
             throw new IllegalArgumentException("Email cannot be empty");
         }
         User user = new User(name, email, age);
@@ -114,6 +123,81 @@ public class UserServiceHibernateImpl implements UserService {
 
         QueryBenchmark benchmark = new QueryBenchmark(userDao);
         benchmark.getQueryPerformance();
+    }
+
+    @Override
+    public void createAccountForUser(Long userId, Long accountNumber, Double balance) {
+        User user = userDao.findById(userId);
+        if (user != null) {
+            Account account = new Account(accountNumber, balance, user);
+            accountDao.save(account);
+
+            logger.info("Account created for user {}: {}", userId, account);
+        } else {
+            logger.warn("Cannot create account - user not found with id={}", userId);
+
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    @Override
+    public List<Account> getUserAccounts(Long userId) {
+        List<Account> accounts = accountDao.findByUserId(userId);
+
+        logger.info("Fetched {} accounts for user {}", accounts.size(), userId);
+
+        return accounts;
+    }
+
+    @Override
+    public void deleteAccount(Long accountId) {
+        Account account = accountDao.findById(accountId);
+        if (account != null) {
+            accountDao.delete(account);
+
+            logger.info("Account deleted with id={}", accountId);
+        } else {
+            logger.warn("Delete failed, account not found with id={}", accountId);
+        }
+    }
+
+    @Override
+    public void transferMoney(Long fromAccountId, Long toAccountId, Double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+
+        Transaction transaction = null;
+        try (Session session = HibernateHandler.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Account fromAccount = session.find(Account.class, fromAccountId);
+            Account toAccount = session.find(Account.class, toAccountId);
+
+            if (fromAccount == null || toAccount == null) {
+                throw new IllegalArgumentException("One or both accounts not found");
+            }
+
+            if (fromAccount.getBalance().compareTo(amount) < 0) {
+                throw new IllegalArgumentException("Result of transaction is negative");
+            }
+
+            fromAccount.setBalance(fromAccount.getBalance() - amount);
+            toAccount.setBalance(toAccount.getBalance() + amount);
+
+            session.merge(fromAccount);
+            session.merge(toAccount);
+
+            transaction.commit();
+
+            logger.info("Transfer completed: {} from account {} to account {}", fromAccount, toAccountId, amount);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+
+            logger.error("Transfer failed: {}", e.getMessage());
+
+            e.printStackTrace();
+        }
     }
 }
 
