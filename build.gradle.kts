@@ -7,7 +7,13 @@ plugins {
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
-application { mainClass.set("org.example.Main") }
+application {
+    mainClass.set("org.example.Main")
+}
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}
 
 java {
     toolchain {
