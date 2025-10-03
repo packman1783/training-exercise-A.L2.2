@@ -24,7 +24,7 @@ public interface UserService {
 
     void benchmarkQueries();
 
-    void createAccountForUser(Long userId, Long accountNumber, Double balance);
+    void createAccountForUser(Long userId, Double balance);
 
     List<Account> getUserAccounts(Long userId);
 

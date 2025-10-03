@@ -12,6 +12,8 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
+import org.example.utilitys.AccountNumberGenerator;
+
 @Entity
 @Table(name = "accounts")
 public class Account {
@@ -37,8 +39,8 @@ public class Account {
     public Account() {
     }
 
-    public Account(Long accountNumber, Double balance, User user) {
-        this.accountNumber = accountNumber;
+    public Account(Double balance, User user) {
+        this.accountNumber = AccountNumberGenerator.nextAccountNumber();
         this.balance = balance;
         this.user = user;
         this.createdAt = LocalDateTime.now();
@@ -62,10 +64,6 @@ public class Account {
 
     public User getUser() {
         return user;
-    }
-
-    public void setAccountNumber(Long accountNumber) {
-        this.accountNumber = accountNumber;
     }
 
     public void setBalance(Double balance) {

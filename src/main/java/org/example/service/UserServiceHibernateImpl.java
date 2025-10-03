@@ -10,7 +10,7 @@ import org.example.dao.UserDao;
 import org.example.entity.Account;
 import org.example.entity.User;
 import org.example.handler.HibernateHandler;
-import org.example.timeUtility.QueryBenchmark;
+import org.example.utilitys.QueryBenchmark;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -126,10 +126,10 @@ public class UserServiceHibernateImpl implements UserService {
     }
 
     @Override
-    public void createAccountForUser(Long userId, Long accountNumber, Double balance) {
+    public void createAccountForUser(Long userId, Double balance) {
         User user = userDao.findById(userId);
         if (user != null) {
-            Account account = new Account(accountNumber, balance, user);
+            Account account = new Account(balance, user);
             accountDao.save(account);
 
             logger.info("Account created for user {}: {}", userId, account);
