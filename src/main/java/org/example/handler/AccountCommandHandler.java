@@ -3,6 +3,7 @@ package org.example.handler;
 import java.util.List;
 
 import org.example.entity.Account;
+import org.example.entity.User;
 import org.example.service.UserService;
 import org.example.ui.ConsoleReader;
 
@@ -17,10 +18,16 @@ public class AccountCommandHandler {
 
     public void createAccountForUser() {
         Long userId = reader.readLong("Enter user ID: ");
-        Long accountNumber = reader.readLong("Enter account number: ");
+
+        User user = userService.getUser(userId);
+        if (user == null) {
+            System.out.println("Error: User with ID " + userId + " not found");
+            return;
+        }
+
         Double balance = reader.readDouble("Enter initial balance: ");
 
-        userService.createAccountForUser(userId, accountNumber, balance);
+        userService.createAccountForUser(userId, balance);
         System.out.println("Account created successfully");
     }
 
