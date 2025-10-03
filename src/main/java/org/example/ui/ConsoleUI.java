@@ -4,7 +4,7 @@ import org.example.handler.AccountCommandHandler;
 import org.example.handler.BenchmarkCommandHandler;
 import org.example.handler.UserCommandHandler;
 import org.example.service.UserService;
-import org.example.timeUtility.QueryBenchmark;
+import org.example.utilitys.QueryBenchmark;
 
 public class ConsoleUI {
     private final ConsoleReader reader;

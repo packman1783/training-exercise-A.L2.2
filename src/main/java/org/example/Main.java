@@ -9,7 +9,7 @@ import org.example.dao.UserDaoHibernateImpl;
 import org.example.handler.HibernateHandler;
 import org.example.service.UserService;
 import org.example.service.UserServiceHibernateImpl;
-import org.example.timeUtility.QueryBenchmark;
+import org.example.utilitys.QueryBenchmark;
 import org.example.ui.ConsoleReader;
 import org.example.ui.ConsoleUI;
 

@@ -1,4 +1,4 @@
-package org.example.timeUtility;
+package org.example.utilitys;
 
 import java.util.List;
 import java.util.function.Supplier;

@@ -1,6 +1,6 @@
 package org.example.handler;
 
-import org.example.timeUtility.QueryBenchmark;
+import org.example.utilitys.QueryBenchmark;
 
 public class BenchmarkCommandHandler {
     private final QueryBenchmark queryBenchmark;
