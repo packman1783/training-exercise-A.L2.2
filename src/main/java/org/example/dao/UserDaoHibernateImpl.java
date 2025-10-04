@@ -6,6 +6,9 @@ import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.example.entity.User;
 import org.example.handler.HibernateHandler;
 
@@ -13,6 +16,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 public class UserDaoHibernateImpl implements UserDao {
+    private static final Logger logger = LogManager.getLogger(UserDaoHibernateImpl.class);
+
     @Override
     public void save(User user) {
         Transaction transaction = null;
@@ -21,9 +26,12 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction = session.beginTransaction();
             session.persist(user);
             transaction.commit();
+
+            logger.info("User successfully saved: {}", user);
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+
+            logger.error("Error while saving user: {}", user, e);
         }
     }
 
@@ -49,9 +57,12 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction = session.beginTransaction();
             session.merge(user);
             transaction.commit();
+
+            logger.info("User successfully updated: {}", user);
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+
+            logger.error("Error while updating user: {}", user, e);
         }
     }
 
@@ -63,9 +74,12 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction = session.beginTransaction();
             session.remove(user);
             transaction.commit();
+
+            logger.info("User successfully deleted: {}", user);
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+
+            logger.error("Error while deleting user: {}", user, e);
         }
     }
 

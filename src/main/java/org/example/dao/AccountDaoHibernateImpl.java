@@ -2,6 +2,9 @@ package org.example.dao;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.example.entity.Account;
 import org.example.handler.HibernateHandler;
 
@@ -9,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 public class AccountDaoHibernateImpl implements AccountDao {
+    private static final Logger logger = LogManager.getLogger(AccountDaoHibernateImpl.class);
 
     @Override
     public void save(Account account) {
@@ -17,9 +21,12 @@ public class AccountDaoHibernateImpl implements AccountDao {
             transaction = session.beginTransaction();
             session.persist(account);
             transaction.commit();
+
+            logger.info("Account successfully saved: {}", account);
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+
+            logger.error("Error while saving account: {}", account, e);
         }
     }
 
@@ -44,9 +51,12 @@ public class AccountDaoHibernateImpl implements AccountDao {
             transaction = session.beginTransaction();
             session.merge(account);
             transaction.commit();
+
+            logger.info("Account successfully updated: {}", account);
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+
+            logger.error("Error while updating account: {}", account, e);
         }
     }
 
@@ -57,9 +67,12 @@ public class AccountDaoHibernateImpl implements AccountDao {
             transaction = session.beginTransaction();
             session.remove(account);
             transaction.commit();
+
+            logger.info("Account successfully deleted: {}", account);
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+
+            logger.error("Error while deleting account: {}", account, e);
         }
     }
 
