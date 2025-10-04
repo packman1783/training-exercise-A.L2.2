@@ -54,6 +54,5 @@ public class AccountCommandHandler {
         Double amount = reader.readDouble("Enter amount to transfer: ");
 
         userService.transferMoney(fromAccountId, toAccountId, amount);
-        System.out.println("Transfer completed successfully");
     }
 }
