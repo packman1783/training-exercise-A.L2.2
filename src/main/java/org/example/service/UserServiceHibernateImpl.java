@@ -163,12 +163,15 @@ public class UserServiceHibernateImpl implements UserService {
 
     @Override
     public void transferMoney(Long fromAccountId, Long toAccountId, Double amount) {
-        if (amount <= 0) {
+        if (amount == null || amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
 
+        Session session = null;
         Transaction transaction = null;
-        try (Session session = HibernateHandler.getSessionFactory().openSession()) {
+
+        try {
+            session = HibernateHandler.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
             Account fromAccount = session.find(Account.class, fromAccountId);
@@ -178,25 +181,37 @@ public class UserServiceHibernateImpl implements UserService {
                 throw new IllegalArgumentException("One or both accounts not found");
             }
 
-            if (fromAccount.getBalance().compareTo(amount) < 0) {
+            double fromBalance = fromAccount.getBalance();
+            double toBalance = toAccount.getBalance();
+
+            if (fromBalance < amount) {
                 throw new IllegalArgumentException("Result of transaction is negative");
             }
 
-            fromAccount.setBalance(fromAccount.getBalance() - amount);
-            toAccount.setBalance(toAccount.getBalance() + amount);
+            fromAccount.setBalance(fromBalance - amount);
+            toAccount.setBalance(toBalance + amount);
 
             session.merge(fromAccount);
             session.merge(toAccount);
 
             transaction.commit();
 
-            logger.info("Transfer completed: {} from account {} to account {}", fromAccount, toAccountId, amount);
+            logger.info("Transfer completed: {} from account {} to account {}", amount, fromAccountId, toAccountId);
+
+            System.out.println("Transfer completed successfully");
+
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
 
-            logger.error("Transfer failed: {}", e.getMessage());
+            logger.error("Transfer failed: {}", e.getMessage(), e);
 
-            e.printStackTrace();
+            System.err.println("Transfer failed: " + e.getMessage());
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 }
